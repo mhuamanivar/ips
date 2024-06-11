@@ -1,0 +1,12 @@
+<h1>Productos</h1>
+
+{% for proveedor in proveedores %}
+
+<div>
+    <h1>{{ proveedor.nombre }}</h1>
+    <button>
+        Delete
+    </button>
+</div>
+
+{% endfor %}
