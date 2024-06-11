@@ -21,7 +21,7 @@ class PedidoAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Detalles del Pedido', {
-            'fields': ('numero_pedido', 'cliente', 'fecha', 'tipo_pedido', 'metodo_pago', 'total', 'productos', 'estado')
+            'fields': ('numero_pedido', 'cliente', 'fecha', 'tipo_pedido', 'metodo_pago', 'total', 'productos', 'estado_pedido' ,'estado')
         }),
     )
 

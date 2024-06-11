@@ -1,7 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
-from .models import Proveedor, Producto
+from .models import Proveedor, Producto, Pedido, Cliente
 from django.shortcuts import get_object_or_404, render
+from .forms import PedidoForm
+from django.contrib.auth import login
 
 # Create your views here.
 def index(request):
@@ -30,3 +32,27 @@ def productos(request):
     return render(request, 'productos.html', {
         'productos': productos,
     })
+
+
+def pedidos(request):
+    pedidos = Pedido.objects.filter(tipo_pedido="C")
+    deudas = Pedido.objects.filter(tipo_pedido="D")
+    
+    print("Pedidos Contado:", pedidos)
+    print("Pedidos A crédito:", deudas)
+    
+    context = {
+        'pedidos': pedidos,
+        'deudas': deudas,
+    }
+    return render(request, 'pedidos.html', context)
+
+def nuevo_pedido(request):
+    if request.method == 'POST':
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos')
+    else:
+        form = PedidoForm()
+    return render(request, 'nuevo_pedido.html', {'form': form})

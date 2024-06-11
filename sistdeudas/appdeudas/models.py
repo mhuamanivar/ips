@@ -1,6 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
 import uuid
 import datetime
 
@@ -57,37 +59,43 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
-class UsuarioPersonalizado(AbstractUser):
-    dni = models.CharField(max_length=20, blank=True)
-    direccion = models.CharField(max_length=100, blank=True)
 
-    groups = models.ManyToManyField(Group, verbose_name=_('groups'), blank=True, related_name='custom_user_set')
-    user_permissions = models.ManyToManyField(Permission, verbose_name=_('user permissions'), blank=True, related_name='custom_user_set')
+class Cliente(models.Model):
+    nombre = models.CharField(max_length=100)
+    correo = models.EmailField(default='')
+    contraseña = models.CharField(max_length=100, default='')  # Agregar campo de contraseña
+    habilitado_para_credito = models.BooleanField(default=False)
+    limite_credito = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
+    archivo = models.FileField(upload_to='archivos/clientes/', null=True, blank=True)
+    estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
 class Trabajador(models.Model):
-    usuario = models.OneToOneField(UsuarioPersonalizado, on_delete=models.CASCADE)
-    codigo = models.CharField(max_length=10)
     nombre = models.CharField(max_length=100)
+    correo = models.EmailField(default='')
+    contraseña = models.CharField(max_length=100, default='')  # Agregar campo de contraseña
     tipo = models.CharField(max_length=1, choices=TipoTrabajador.TIPOS)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
-    def asignar_grupo_y_permisos(self):
-        grupo, creado = Group.objects.get_or_create(name=f'{self.get_tipo_display()}s')
-        self.usuario.groups.add(grupo)
+@receiver(post_save, sender=Cliente)
+def create_cliente_user(sender, instance, created, **kwargs):
+    if created:
+        # Generar un nombre de usuario único
+        username = f"cliente_{instance.pk}" 
+        # Crear el usuario
+        user = User.objects.create_user(username=instance.correo, email=instance.correo, password=instance.contraseña)
+        # Guardar el objeto Cliente
+        instance.save()
 
-class Cliente(models.Model):
-    usuario = models.OneToOneField(UsuarioPersonalizado, on_delete=models.CASCADE)
-    codigo = models.CharField(max_length=10)
-    nombre = models.CharField(max_length=100)
-    correo = models.EmailField()
-    habilitado_para_credito = models.BooleanField(default=False)
-    limite_credito = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
-    archivo = models.FileField(upload_to='archivos/clientes/', null=True, blank=True)  # Campo para guardar la ubicación del archivo
-    estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
+@receiver(post_save, sender=Trabajador)
+def create_trabajador_user(sender, instance, created, **kwargs):
+    if created:
+        # Generar un nombre de usuario único
+        username = f"cliente_{instance.pk}" 
+        # Crear el usuario
+        user = User.objects.create_user(username=instance.correo, email=instance.correo, password=instance.contraseña)
+        # Guardar el objeto Trabajador
+        instance.save()
 
-    def asignar_grupo(self):
-        grupo, creado = Group.objects.get_or_create(name='Clientes')
-        self.usuario.groups.add(grupo)
 
 class Pedido(models.Model):
     def generate_pedido_number():
@@ -107,6 +115,7 @@ class Pedido(models.Model):
     metodo_pago = models.CharField(max_length=1, choices=MetodoPago.METODOS)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     productos = models.ManyToManyField(Producto)
+    estado_pedido = models.CharField(max_length=1, choices=(("V", "Vigente"),("C","Cerrado")))
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
 class Cronograma(models.Model):
