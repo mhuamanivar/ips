@@ -10,4 +10,5 @@ urlpatterns = [
     path('productos/<str:cod>', views.producto_detalle, name="producto_detalle"),
     path('pedidos/', views.pedidos, name="pedidos"),
     path('nuevo_pedido/', views.nuevo_pedido, name="nuevo_pedido"),
+    path('signup/', views.signup, name="signup"),
 ]

@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
-from .models import Proveedor, Producto, Pedido
+from .models import Proveedor, Producto, Pedido, Cliente
 from .forms import CrearNuevoPedido
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
@@ -57,7 +59,7 @@ def nuevo_pedido(request):
             pedido.save()
             return redirect('pedidos')
         else:
-            return render(request, 'nuevo_pedido.html', {
+            return render(request, 'nuevo_pedido', {
                 'form': form
             })
 
@@ -66,3 +68,24 @@ def producto_detalle(request, cod):
     return render(request, 'productos/detalle.html',{
         'producto': producto,
     })
+
+def signup(request):
+
+    if request.method == 'GET':
+        return render(request, 'signup.html', {
+            'form': UserCreationForm
+        })
+    else:
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                Cliente.objects.create(nombre=request.POST['username'],correo=request.POST['username'], contraseña=request.POST['password1'])
+                return HttpResponse('Usuario creado satisfactoriamente')
+            except:
+                return render(request, 'signup.html', {
+                    'form': UserCreationForm,
+                    'error': 'El usuario ya existe'
+                })
+        return render(request, 'signup.html', {
+            'form': UserCreationForm,
+            'error': 'Contraseñas no coinciden'
+        })

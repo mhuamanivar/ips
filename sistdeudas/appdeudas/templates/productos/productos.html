@@ -24,8 +24,12 @@
         <div class="productos__grid">
             {% for producto in productos %}
             <div class="producto">
-                <img src="{% static 'img/producto.jpg' %}" alt="Producto">
-                <h2>{{ producto.nombre }}</h2>
+                <a href="{{ producto.codigo }}">
+                    <img src="{% static 'img/producto.jpg' %}" alt="Producto">
+                </a>
+                <h2>
+                    <a href="{{ producto.codigo }}">{{ producto.nombre }}</a>
+                </h2>
                 <p>Description of product</p>
                 <h3>${{ producto.precio }}</h3>
             </div>
