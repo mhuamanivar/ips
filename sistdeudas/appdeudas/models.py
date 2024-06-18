@@ -16,6 +16,14 @@ class EstadoModelo:
         (ELIMINADO, 'Eliminado'),
     )
 
+class EstadoPedido:
+    VIGENTE = 'V'
+    CERRADO = 'C'
+    ESTADOS_PEDIDO = (
+        (VIGENTE, 'Vigente'),
+        (CERRADO, 'Cerrado'),
+    )
+
 class TipoPedido:
     CONTADO = 'C'
     CREDITO = 'D'
@@ -48,6 +56,9 @@ class Proveedor(models.Model):
     nombre = models.CharField(max_length=40)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
+    def __str__(self):
+        return self.nombre
+
 class Producto(models.Model):
     def generate_codigo():
         return uuid.uuid4().hex[:8].upper()
@@ -59,6 +70,9 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Cliente(models.Model):
     nombre = models.CharField(max_length=100)
@@ -69,12 +83,18 @@ class Cliente(models.Model):
     archivo = models.FileField(upload_to='archivos/clientes/', null=True, blank=True)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
+    def __str__(self):
+        return self.nombre
+
 class Trabajador(models.Model):
     nombre = models.CharField(max_length=100)
     correo = models.EmailField(default='')
     contraseña = models.CharField(max_length=100, default='')  # Agregar campo de contraseña
     tipo = models.CharField(max_length=1, choices=TipoTrabajador.TIPOS)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
+
+    def __str__(self):
+        return self.nombre
 
 @receiver(post_save, sender=Cliente)
 def create_cliente_user(sender, instance, created, **kwargs):
@@ -110,12 +130,12 @@ class Pedido(models.Model):
 
     numero_pedido = models.CharField(max_length=8, primary_key=True, default=generate_pedido_number, editable=False)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    fecha = models.DateField()
+    fecha = models.DateField(default=datetime.date.today)
     tipo_pedido = models.CharField(max_length=1, choices=TipoPedido.TIPOS)
     metodo_pago = models.CharField(max_length=1, choices=MetodoPago.METODOS)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     productos = models.ManyToManyField(Producto)
-    estado_pedido = models.CharField(max_length=1, choices=(("V", "Vigente"),("C","Cerrado")))
+    estado_pedido = models.CharField(max_length=1, choices=EstadoPedido.ESTADOS_PEDIDO, default=EstadoPedido.VIGENTE)
     estado = models.CharField(max_length=1, choices=EstadoModelo.ESTADOS, default=EstadoModelo.ACTIVO)
 
 class Cronograma(models.Model):

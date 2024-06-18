@@ -1,16 +1,12 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from .models import Proveedor, Producto, Pedido, Cliente
-from django.shortcuts import get_object_or_404, render
-from .forms import PedidoForm
-from django.contrib.auth import login
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from .models import Proveedor, Producto, Pedido
+from .forms import CrearNuevoPedido
 
 # Create your views here.
 def index(request):
     title = 'Django Course!!'
-    return render(request, 'index.html', {
-        'title': title,
-    })
+    return render(request, 'index.html')
 
 def hello(request, username):
     return HttpResponse("<h1>Hola %s</h1>" % username)
@@ -29,7 +25,7 @@ def proveedores(request):
 
 def productos(request):
     productos = Producto.objects.all()
-    return render(request, 'productos.html', {
+    return render(request, 'productos/productos.html', {
         'productos': productos,
     })
 
@@ -45,14 +41,28 @@ def pedidos(request):
         'pedidos': pedidos,
         'deudas': deudas,
     }
-    return render(request, 'pedidos.html', context)
+    return render(request, 'pedidos/pedidos.html', context)
 
 def nuevo_pedido(request):
-    if request.method == 'POST':
-        form = PedidoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('pedidos')
+    if request.method == 'GET':
+        return render(request, 'pedidos/nuevo_pedido.html', {
+            'form': CrearNuevoPedido()
+        })
     else:
-        form = PedidoForm()
-    return render(request, 'nuevo_pedido.html', {'form': form})
+        form = CrearNuevoPedido(request.POST)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.save()
+            pedido.productos.set(form.cleaned_data['productos'])
+            pedido.save()
+            return redirect('pedidos')
+        else:
+            return render(request, 'nuevo_pedido.html', {
+                'form': form
+            })
+
+def producto_detalle(request, cod):
+    producto = get_object_or_404(Producto, codigo=cod)
+    return render(request, 'productos/detalle.html',{
+        'producto': producto,
+    })
