@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-form">
+        <h2>REGÍSTRATE</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_email">Ingrese correo electrónico</label>
+                {{ form.email }}
+            </div>
+            <div class="form-group">
+                <label for="id_password1">Ingrese contraseña</label>
+                {{ form.password1 }}
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Ingrese nuevamente contraseña</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit">Siguiente</button>
+        </form>
+    </div>
+    <div class="register-image">
+        <img src="{% static 'images/tree1.png' %}" alt="Tree">
+    </div>
+</div>
+
+<script src="{% static 'js/placeholders.js' %}"></script>
+{% endblock %}
