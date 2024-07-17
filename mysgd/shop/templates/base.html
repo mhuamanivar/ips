@@ -26,7 +26,9 @@
                     <a href="#"><img src="{% static 'images/profile.png' %}" width="23px" alt="Profile"></a>
                     <div class="dropdown-content">
                         <span>Bienvenido, {{ user.first_name }}</span>
-                        <a href="{% url 'profile' %}">Configuración</a>
+                        {% if user.is_superuser %}
+                            <a href="{% url 'admin_panel:profile_list' %}">Clientes</a>
+                        {% endif %}
                         <form id="logout-form" action="{% url 'logout' %}" method="post">
                             {% csrf_token %}
                             <button id="logout-button" class="logout-button" type="submit">Cerrar sesión</button>
