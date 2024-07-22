@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row profile-info">
+      <div class="col-md-3 categorias">
+        <h4>Configuración</h4>
+        <ul class="nav flex-column">
+          <li class="nav-item"><a class="nav-link" href="#datos-personales"><b>Datos Personales</b></a></li>
+          <li class="nav-item"><a class="nav-link" href="#correo-electronico">Correo electrónico</a></li>
+          <li class="nav-item"><a class="nav-link" href="#nombres">Nombres</a></li>
+          <li class="nav-item"><a class="nav-link" href="#apellidos">Apellidos</a></li>
+          <li class="nav-item"><a class="nav-link" href="#dni">DNI</a></li>
+          <li class="nav-item"><a class="nav-link" href="#direccion">Dirección</a></li>
+          <li class="nav-item"><a class="nav-link" href="#numero-celular">Número de celular</a></li>
+          <li class="nav-item"><a class="nav-link" href="#datos-aval"><b>Datos Aval</b></a></li>
+          <li class="nav-item"><a class="nav-link" href="#aval">Datos Aval</a></li>
+        </ul>
+      </div>
+      <div class="col-md-9 profile-data">
+        <h2 class="text-left">PERFIL</h2>
+        <form method="post" enctype="multipart/form-data" class="profile-form">
+          {% csrf_token %}
+          <h4 id="datos-personales">Datos Personales</h4>
+          <div class="form-group">
+            <label for="id_email">Correo electrónico</label>
+            {{ user_form.email }}
+          </div>
+          <div class="form-group" id="nombres">
+            <label for="id_first_name">Nombres</label>
+            {{ user_form.first_name }}
+          </div>
+          <div class="form-group" id="apellidos">
+            <label for="id_last_name">Apellidos</label>
+            {{ user_form.last_name }}
+          </div>
+          <div class="form-group" id="dni">
+            <label for="id_dni">DNI</label>
+            {{ profile_form.dni }}
+          </div>
+          <div class="form-group" id="direccion">
+            <label for="id_address">Dirección</label>
+            {{ profile_form.address }}
+          </div>
+          <div class="form-group" id="numero-celular">
+            <label for="id_phone_number">Número de Celular</label>
+            {{ profile_form.phone_number }}
+          </div>
+          <hr>
+          <h4 id="datos-aval">Datos Aval</h4>
+          <div id="aval" class="form-group">
+            <label for="id_credit_guarantor">Subir Aval</label>
+            {{ profile_form.credit_guarantor }}
+          </div>
+          
+          {% if profile_form.credit_approved.value %}
+            <p>Su aval ha sido aprobado.</p>
+          {% else %}
+            <p><b>Su aval no ha sido aprobado o no ha subido un archivo de aval hasta el momento.</b></p>
+          {% endif %}
+
+           <button type="submit" class="btn btn-success ml-auto">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <h1 class="main-title">PEDIDOS</h1>
+    <div class="tables-container">
+        <div class="table-container">
+            <h2 class="table-title">PEDIDOS AL CONTADO</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Productos</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders_contado %}
+                        <tr>
+                            <td>{{ order.formatted_created_date }}</td>
+                            <td>
+                                {% with order.items.all as items %}
+                                    {% for item in items|slice:":2" %}
+                                        {{ item.product.name }} (x{{ item.quantity }}){% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    {% if items|length > 2 %}...{% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>{{ order.formatted_created_time }}</td>
+                            <td>{{ order.get_status_display }}</td>
+                            <td>S/. {{ order.total_amount }}</td>
+                            <td><a href="{% url 'order_detail' order.id %}" class="link">Ver Detalles</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="table-container">
+            <h2 class="table-title">PEDIDOS A CRÉDITO</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Productos</th>
+                        <th>Hora</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Detalles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders_credito %}
+                        <tr>
+                            <td>{{ order.formatted_created_date }}</td>
+                            <td>
+                                {% with order.items.all as items %}
+                                    {% for item in items|slice:":2" %}
+                                        {{ item.product.name }} (x{{ item.quantity }}){% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    {% if items|length > 2 %}...{% endif %}
+                                {% endwith %}
+                            </td>
+                            <td>{{ order.formatted_created_time }}</td>
+                            <td>{{ order.get_status_display }}</td>
+                            <td>S/. {{ order.total_amount }}</td>
+                            <td class="link"><a href="{% url 'order_detail' order.id %}" class="link">Ver Detalles</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
