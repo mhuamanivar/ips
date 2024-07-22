@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <h2 class="mb-4">Nuevo Pedido</h2>
+    <div class="row">
+        {% if cart %}
+        <div class="col-md-8">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Productos</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                        <th>Importe</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                    <tr>
+                        <td class="d-flex align-items-center">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="img-thumbnail me-2" style="width: 50px; height: 50px;">
+                            <span>{{ item.product.name }}</span>
+                        </td>
+                        <td>
+                            <form method="post" action="{% url 'update_cart' item.id %}" class="d-flex cart-item-form">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="decrease" class="btn btn-outline-secondary shadow-none decrease-btn" {% if item.quantity == 1 %}disabled{% endif %}>-</button>
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control mx-2 quantity-input" style="width: 60px;" readonly>
+                                <button type="submit" name="action" value="increase" class="btn btn-outline-secondary shadow-none increase-btn">+</button>
+                            </form>
+                        </td>
+                        <td>S/. {{ item.product.price }}</td>
+                        <td>S/. {{ item.product.price|multiply:item.quantity }}</td>
+                        <td>
+                            <form method="post" action="{% url 'delete_cart_item' item.id %}" class="delete-item-form">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger btn-sm shadow-none">Eliminar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">Total</td>
+                        <td id="total-price" class="fw-bold">S/. {{ cart|total_price }}</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Formulario y botón para limpiar el carrito -->
+            <form method="post" action="{% url 'clear_cart' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger mt-3">Limpiar Carrito</button>
+            </form>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-custom">
+                <div class="card-body">
+                    <h4 class="card-title text-center mb-4">Realizar Pago</h4>
+                    <p class="text-left">Total:</p>
+                    <h5 class="card-text text-center mb-4">S/. {{ cart|total_price }}</h5>
+                    <form method="post" action="{% url 'cart_view' %}">
+                        {% csrf_token %}
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" id="paymentType1" name="paymentType" value="cash" checked>
+                            <label class="form-check-label" for="paymentType1">Pago Inmediato</label>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="radio" id="paymentType2" name="paymentType" value="credit" {% if not user.profile.credit_approved or user.profile.has_outstanding_debt %}disabled{% endif %}>
+                            <label class="form-check-label" for="paymentType2">Pago en Cuotas</label>
+                        </div>
+                        {% if not user.profile.credit_approved %}
+                        <p class="text-muted small mb-3">
+                            Para solicitar crédito, actualiza tu aval de pago en la configuración de tu <a href="{% url 'profile' %}" class="text-success">perfil</a>.
+                        </p>
+                        {% elif user.profile.has_outstanding_debt %}
+                        <p class="text-muted small mb-3">
+                            No puede solicitar nueva deuda si ya tiene una pendiente.
+                        </p>
+                        {% else %}
+                        <p class="text-muted small mb-3">
+                            Al seleccionar pago en cuotas podrá seleccionar también una cuota para pagar a la quincena.
+                        </p>
+                        {% endif %}
+                        <button type="submit" class="btn btn-success w-100">Continuar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12 text-center empty-cart">
+            <img src="{% static 'images/empty_cart.png' %}" alt="Carrito Vacío" class="img-fluid" style="max-width: 300px; opacity: 0.3;">
+            <h3 class="mt-4">El carrito está vacío</h3>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock %}

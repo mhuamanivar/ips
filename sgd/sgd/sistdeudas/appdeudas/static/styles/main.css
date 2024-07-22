@@ -1,0 +1,263 @@
+
+body {
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    background-color: #fff;
+    justify-content: center;
+    align-items: center;
+    max-width: 100%;
+    margin: 0;
+}
+
+.menu-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: white;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.logoEmpresa {
+    margin-right: 10px;
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    margin-right: 50px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.navbar ul li a:hover {
+    text-decoration: underline;
+}
+
+.navbar a img {
+    vertical-align: middle;
+    max-width: 50px;
+}
+
+.content-container {
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+}
+
+.home {
+    display: flex;
+    align-items: center;
+    padding: 0;
+}
+
+.home__text {
+    width: 50%;
+    padding: 0 150px;
+}
+
+.home__text h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+.home__text p {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.home__img {
+    width: 50%;
+}
+
+.home__img img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+.productos {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px 0;
+}
+
+.productos__categorias {
+    width: 20%;
+    padding: 0 20px;
+    border-right: 1px solid #e0e0e0;
+}
+
+.productos__categorias h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.productos__categorias p {
+    color: #333;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.productos__lista {
+    width: 80%;
+    padding: 0 20px;
+}
+
+.productos__lista h1 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.productos__lista form {
+    display: flex;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    overflow: hidden;
+}
+
+.productos__lista input[type="text"] {
+    flex: 1;
+    padding: 10px;
+    border: none;
+}
+
+.productos__lista button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ffffff;
+    cursor: pointer;
+}
+
+.productos__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.producto {
+    border: none;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.producto img {
+    max-width: 100%;
+    border-radius: 6px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: -6px;
+}
+
+.producto img {
+    max-width: 100%;
+    border-radius: 6px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: -6px;
+}
+
+.producto h2 {
+    font-size: 18px;
+    margin-bottom: -6px;
+}
+
+.producto h2 a {
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.producto h2 a:hover {
+    text-decoration: underline;
+}
+
+.producto p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: -6px;
+}
+
+.producto h3 {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: -6px;
+}
+
+.main-title {
+    text-align: left;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.new-order-button {
+    display: block;
+    padding: 10px 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 0px solid #ccc;
+    font-size: 14px;
+    border-radius: 4px;
+    text-align: left;
+}
+
+.tables-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.table-container {
+    width: 48%;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+}
+
+.table-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    font-size: 12px;
+    border-collapse: collapse;
+}
+
+thead th {
+    text-align: left;
+    padding: 10px;
+    color: #a1a1a1;
+    background-color: #ffffff;
+    border-bottom: 2px solid #ddd;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}

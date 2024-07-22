@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h2>Order Success - Paid</h2>
+<p>Your order {{ order.name }}has been placed successfully!</p>
+<a href="{% url 'home' %}">Return to Home</a>
+{% endblock %}
