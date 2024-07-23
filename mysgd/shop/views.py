@@ -106,13 +106,10 @@ def product_list(request):
     products = Product.objects.all().order_by('name')
     categories = Category.objects.all()
 
-    # Manejo de la búsqueda
     query = request.POST.get('q')
     if query:
-        # Filtrar productos por nombre o descripción que contengan el query
         products = products.filter(Q(name__icontains=query))
 
-    # Verificar si no se encontraron resultados
     no_results = False
     if query and len(products) == 0:
         no_results = True
@@ -120,15 +117,26 @@ def product_list(request):
     context = {
         'products': products,
         'categories': categories,
-        'no_results': no_results,  # Variable para indicar que no se encontraron resultados
+        'no_results': no_results,
+        'active_category': None,  # Indicador para la categoría activa
     }
     return render(request, 'product_list.html', context)
+
 
 def product_list_by_category(request, category_id):
     category = get_object_or_404(Category, id=category_id)
     products = Product.objects.filter(category=category).order_by('name')
     categories = Category.objects.all()
-    return render(request, 'product_list.html', {'products': products, 'categories': categories})
+
+    # Obtener la categoría activa para marcarla en la plantilla
+    active_category = category_id
+
+    return render(request, 'product_list.html', {
+        'products': products,
+        'categories': categories,
+        'active_category': active_category,
+    })
+
 
 
 def product_detail(request, product_id):

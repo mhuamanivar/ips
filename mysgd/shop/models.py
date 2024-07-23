@@ -6,9 +6,23 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
+
+class RecordStatus(models.Model):
+    STATUS_CHOICES = [
+        ('A', 'Active'),
+        ('I', 'Inactive'),
+        ('*', 'Deleted')
+    ]
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, unique=True)
+    description = models.CharField(max_length=50, default=None)
+
+    def __str__(self):
+        return self.description
+
 class Supplier(models.Model):
     name = models.CharField(max_length=100)
     contact_info = models.TextField()
+    record_status = models.ForeignKey(RecordStatus, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -28,6 +42,7 @@ class Product(models.Model):
     unit_of_measure = models.CharField(max_length=10, default='L')
     supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE, blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True)
+    record_status = models.ForeignKey(RecordStatus, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name

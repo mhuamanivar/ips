@@ -5,59 +5,52 @@
 <div class="container-fluid">
     <div class="row profile-info">
         <div class="col-md-9 profile-data">
-            <h2 class="text-left">DETALLE DEL PERFIL</h2>
+            <h2 class="text-left">PERFIL</h2>
             <form method="post" enctype="multipart/form-data" class="profile-form">
                 {% csrf_token %}
                 <h4 id="datos-personales">Datos Personales</h4>
                 <div class="form-group">
                     <label for="id_email">Correo electrónico</label>
-                    {{ user.email }}
+                    {{ user_form.email }}
                 </div>
                 <div class="form-group" id="nombres">
                     <label for="id_first_name">Nombres</label>
-                    {{ user.first_name }}
+                    {{ user_form.first_name }}
                 </div>
                 <div class="form-group" id="apellidos">
                     <label for="id_last_name">Apellidos</label>
-                    {{ user.last_name }}
+                    {{ user_form.last_name }}
                 </div>
                 <div class="form-group" id="dni">
                     <label for="id_dni">DNI</label>
-                    {{ profile.dni }}
+                    {{ profile_form.dni }}
                 </div>
                 <div class="form-group" id="direccion">
                     <label for="id_address">Dirección</label>
-                    {{ profile.address }}
+                    {{ profile_form.address }}
                 </div>
                 <div class="form-group" id="numero-celular">
                     <label for="id_phone_number">Número de Celular</label>
-                    {{ profile.phone_number }}
+                    {{ profile_form.phone_number }}
                 </div>
                 <hr>
                 <h4 id="datos-aval">Datos Aval</h4>
                 <div id="aval" class="form-group">
                     <label for="id_credit_guarantor">Subir Aval</label>
-                    {% if profile.credit_guarantor %}
-                        <a href="{{ profile.credit_guarantor.url }}" target="_blank">Ver Aval</a>
-                    {% else %}
-                        <p>No se ha subido ningún archivo de aval.</p>
-                    {% endif %}
+                    {{ profile_form.credit_guarantor }}
                 </div>
                 
-                {% if profile.credit_approved %}
+                {% if profile_form.credit_approved.value %}
                     <p>Su aval ha sido aprobado.</p>
                 {% else %}
                     <p><b>Su aval no ha sido aprobado o no ha subido un archivo de aval hasta el momento.</b></p>
                 {% endif %}
 
-                <a href="{% url 'admin_panel:profile_list' %}" class="btn btn-secondary">Volver a la lista de perfiles</a>
+                <button type="submit" class="btn btn-success ml-auto" id="save-btn" style="display: none;">Guardar</button>
+                <button type="button" class="btn btn-primary ml-auto" id="edit-btn">Editar</button>
             </form>
         </div>
     </div>
 </div>
 <script src="{% static 'js/profile.js' %}"></script>
-{% endblock %}
-
-{% block extra_js %}
-    <script src="{% static 'js/profile.js' %}"></script>
 {% endblock %}

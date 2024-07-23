@@ -8,7 +8,7 @@
         <h1>PRODUCTOS</h1>
         <h2>Proveedores</h2>
         <div class="d-flex my-3">
-            <div class="w-100" style="max-width: 70%; margin: 0">
+            <div class="w-100" style="max-width: 80%; margin: 0">
                 <div class="btn-group w-100" role="group" aria-label="Basic example">
                     <a href="{% url 'admin_panel:product_list' %}" class="btn btn-outline-secondary">Todos</a>
                     {% for proveedor in suppliers %}
@@ -20,7 +20,7 @@
 
         <h2>Categorías</h2>
         <div class="d-flex my-3">
-            <div class="w-100" style="max-width: 70%; margin: 0">
+            <div class="w-100" style="max-width: 80%; margin: 0">
                 <div class="btn-group w-100" role="group" aria-label="Basic example">
                     <a href="{% url 'admin_panel:product_list' %}" class="btn btn-outline-secondary">Todos</a>
                     {% for category in categories %}
@@ -29,9 +29,9 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="tables-container mb-4">
-            <div class="table-container" style="max-width: 80%;">
+            <div class="table-container" style="max-width: 90%;">
                 <h2 class="table-title">Productos</h2>
                 <table class="table">
                     <thead>
@@ -48,9 +48,8 @@
                         {% for product in products %}
                             <tr>
                                 <td>
-                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail me-2"
-                                        style="width: 50px; height: 50px;">
-                                    <a href="{% url 'product_detail' product_id=product.id %}">{{ product.name }}</a>
+                                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-thumbnail me-2" style="width: 50px; height: 50px;">
+                                    <a href="#">{{ product.name }}</a>
                                 </td>
                                 <td>{{ product.supplier.name }}</td>
                                 <td>{{ product.category.name }}</td>
@@ -58,8 +57,8 @@
                                 <td>S/. {{ product.price }}</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <button class="btn btn-success">Editar</button>
-                                        <button class="btn btn-danger">Eliminar</button>
+                                        <a href="{% url 'admin_panel:edit_product' product.id %}" class="btn btn-success btn-sm">Editar</a>
+                                        <a href="{% url 'admin_panel:delete_product' product.id %}" class="btn btn-danger btn-sm">Eliminar</a>
                                     </div>
                                 </td>
                             </tr>
