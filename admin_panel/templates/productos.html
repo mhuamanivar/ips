@@ -1,0 +1,50 @@
+{% extends 'base-ad.html' %}
+{% load static %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="nav nav-tabs my-3">
+                <a class="nav-link active" href="#">Todos</a>
+                {% for proveedor in proveedores %}
+                <a class="nav-link" href="#">{{proveedor.name}}</a>
+                {% endfor %}
+            </nav>
+        </div>
+        <div class="col-md-12">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Productos</th>
+                        <th>Proveedor</th>
+                        <th>Stock</th>
+                        <th>Precio Unitario</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{{producto.name}}</td>
+                        <td>{{producto.supplier}}</td>
+                        <td>{{producto.quantity}}</td>
+                        <td>{{producto.price}}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-success btn-sm">Editar</button>
+                                <button class="btn btn-danger btn-sm">Eliminar</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3">No hay productos disponibles.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

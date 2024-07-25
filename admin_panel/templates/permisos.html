@@ -1,0 +1,39 @@
+{% extends 'base-ad.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Lista de Perfiles</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>DNI</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Permiso Administrador</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.dni }}</td>
+                <td>{{ profile.phone_number }}</td>
+                <td>{{ profile.address }}</td>
+                <td>
+                    {% if profile.is_admin %}
+                        Sí
+                    {% else %}
+                        No
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'admin_panel:assign_superuser' user_id=profile.user.id %}" class="btn btn-primary btn-sm">{% if profile.is_admin %}Revocar{% else %}Asignar{% endif %} Permiso</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

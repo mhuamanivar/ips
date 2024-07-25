@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Asignar Permiso de Administrador</h2>
+    <p>¿Estás seguro de que quieres {% if profile.is_admin %}revocar{% else %}asignar{% endif %} permisos de administrador a {{ profile.user.username }}?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">{% if profile.is_admin %}Revocar{% else %}Asignar{% endif %} Permiso</button>
+        <a href="{% url 'admin_panel:lista_Usuarios' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
